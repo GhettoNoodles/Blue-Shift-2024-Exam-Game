@@ -10,6 +10,14 @@ public class ShipController : MonoBehaviour
     private float DUmove;
     private Rigidbody rb;
     [SerializeField] private float MoveSpeed;
+    private float _lookX;
+    private float _mouseY;
+    private float _controllerY;
+    private float _xRot;
+    private float _yRot;
+    [SerializeField] private float lookSensitivity;
+    [SerializeField] private Transform cam;
+    [SerializeField] private Transform cameraOrbit;
 
     private void Start()
     {
@@ -32,6 +40,18 @@ public class ShipController : MonoBehaviour
         {
             DUmove = 0;
         }
+        _mouseY = Input.GetAxis("Mouse X") * Time.deltaTime * lookSensitivity * 1000;
+       // _controllerY = Input.GetAxis("Controller X") * Time.deltaTime * lookSensitivity * 1000;
+        if (Math.Abs(_mouseY) > Math.Abs(_controllerY))
+        {
+            _yRot += _mouseY;
+        }
+        else
+        {
+            _yRot += _controllerY;
+        }
+
+        cameraOrbit.rotation = Quaternion.Euler(0, _yRot, 0);
     }
 
     private void FixedUpdate()
