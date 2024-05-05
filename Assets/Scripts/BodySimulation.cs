@@ -21,7 +21,7 @@ public class BodySimulation : MonoBehaviour
         }
         for (int i = 0; i < bodies.Length; i++)
         {
-            bodies[i].UpdatePosition(Universe.Instance.physicsTimeStep);
+            //bodies[i].UpdatePosition(Universe.Instance.physicsTimeStep);
         }
     }
 }
