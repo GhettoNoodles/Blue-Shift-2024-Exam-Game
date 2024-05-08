@@ -17,12 +17,14 @@ public class ShipController : MonoBehaviour
     private float _mouseY;
     private float _xRot;
     private float _yRot;
+    [SerializeField] private GameObject dirInd;
     [SerializeField] private float lookSensitivity;
     [SerializeField] private Transform cam;
     [SerializeField] private Transform cameraOrbit;
     [SerializeField] private ParticleSystem partL;
     [SerializeField] private ParticleSystem partR;
     [SerializeField] private ParticleSystem partB;
+    
 
     private void Start()
     {
@@ -58,12 +60,44 @@ public class ShipController : MonoBehaviour
         //cameraOrbit.localRotation = Quaternion.Euler(_xRot, _yRot, 0);
         
         UI.Instance.UpdateHud(BFMove,LRMove);
+        updateDir();
     }
 
     private void FixedUpdate()
     {
         rb.AddRelativeForce(LRMove*thrust, DUmove * thrust, BFMove * thrust);
+        UI.Instance.UpdateVelocity(rb.velocity.magnitude);
         rb.AddRelativeTorque(0f, turn * turningThrust, 0f);
+        
+    }
+
+    private void updateDir()
+    {
+        var dir = rb.velocity.normalized;
+        var angle = Vector3.SignedAngle(Vector3.forward, dir,Vector3.up);
+        /*float xtwist;
+        float ztwist;
+        if (angle is > 0f and <= 90f)
+        {
+            xtwist = -10;
+            ztwist = -10;
+        }
+        else if (angle is > 90f and <= 180f)
+        {
+            xtwist = 10;
+            ztwist = -10;
+        }else if (angle is <0f  and >= -90f)
+        {
+            xtwist = -10;
+            ztwist = 10;
+        }
+        else
+        {
+            xtwist = 10;
+            ztwist = 10;
+        }*/
+        dirInd.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        Debug.Log(angle);
     }
 
     private void ParticleEffects(float _BFMove, float _turn)
