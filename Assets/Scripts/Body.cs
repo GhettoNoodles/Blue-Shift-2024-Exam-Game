@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Body : MonoBehaviour
 {
-    [SerializeField] private float mass;
+    public float mass;
     [SerializeField] private float radius;
     [SerializeField] private Vector3 initialVelocity;
     [SerializeField] private Rigidbody rb;
@@ -13,12 +13,13 @@ public class Body : MonoBehaviour
     public Vector3 _currentVelocity;
     private Vector3 largestPull;
     public Vector3 closestPos;
+    private Collider col;
     
 
     private void Start()
     {
         _currentVelocity = initialVelocity;
-       
+        col = GetComponent<Collider>();
     }
 
     public void UpdateVelocity(Body[] allBodies, float timeStep)
@@ -47,11 +48,8 @@ public class Body : MonoBehaviour
         }
     }
 
-    public void UpdatePosition(float timeStep)
+    public bool Contains(Vector3 pt)
     {
-        if (!immovable)
-        {
-            GetComponent<Rigidbody>().position += _currentVelocity * timeStep;
-        }
+        return col.bounds.Contains(pt);
     }
 }

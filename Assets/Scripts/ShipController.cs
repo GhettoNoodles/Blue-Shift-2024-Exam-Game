@@ -24,6 +24,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] private ParticleSystem partL;
     [SerializeField] private ParticleSystem partR;
     [SerializeField] private ParticleSystem partB;
+    [SerializeField] private Vis vis;
     
 
     private void Start()
@@ -61,6 +62,7 @@ public class ShipController : MonoBehaviour
         
         UI.Instance.UpdateHud(BFMove,LRMove);
         updateDir();
+        vis.RenderArc(rb.velocity,rb.position,rb.mass);
     }
 
     private void FixedUpdate()
@@ -97,7 +99,6 @@ public class ShipController : MonoBehaviour
             ztwist = 10;
         }*/
         dirInd.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
-        Debug.Log(angle);
     }
 
     private void ParticleEffects(float _BFMove, float _turn)
