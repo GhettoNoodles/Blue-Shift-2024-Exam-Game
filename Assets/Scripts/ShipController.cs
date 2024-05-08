@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 public class ShipController : MonoBehaviour
 {
     private float LRMove;
+    private float turn;
     private float BFMove;
     private float DUmove;
     private Rigidbody rb;
@@ -30,8 +31,44 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
+        turn = Input.GetAxis("Right Stick Horizontal");
+        BFMove = Input.GetAxis("Vertical");
         LRMove = Input.GetAxis("Horizontal");
-        if (LRMove < -0.1f)
+        ParticleEffects(BFMove,turn);
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            DUmove = 1;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            DUmove = -1;
+        }
+        else
+        {
+            DUmove = 0;
+        }
+
+        _mouseY = Input.GetAxis("Mouse X") * Time.deltaTime * lookSensitivity * 1000;
+        // _controllerY = Input.GetAxis("Controller X") * Time.deltaTime * lookSensitivity * 1000;
+        _yRot += _mouseY;
+        _lookX = Input.GetAxis("Mouse Y") * Time.deltaTime * lookSensitivity * 1000;
+        _xRot -= _lookX;
+        _xRot = Mathf.Clamp(_xRot, -30, 30);
+        _yRot = Mathf.Clamp(_yRot, -60, 60);
+        //cameraOrbit.localRotation = Quaternion.Euler(_xRot, _yRot, 0);
+        
+        UI.Instance.UpdateHud(BFMove,LRMove);
+    }
+
+    private void FixedUpdate()
+    {
+        rb.AddRelativeForce(LRMove*thrust, DUmove * thrust, BFMove * thrust);
+        rb.AddRelativeTorque(0f, turn * turningThrust, 0f);
+    }
+
+    private void ParticleEffects(float _BFMove, float _turn)
+    {
+        if (_turn < -0.1f)
         {
             if (!partR.isPlaying)
             {
@@ -43,7 +80,7 @@ public class ShipController : MonoBehaviour
                 partL.Stop();
             }
         }
-        else if (LRMove > 0.1f)
+        else if (_turn > 0.1f)
         {
             if (!partL.isPlaying)
             {
@@ -70,7 +107,7 @@ public class ShipController : MonoBehaviour
             }
         }
 
-        if (BFMove>0.1f)
+        if (_BFMove>0.1f)
         {
             if (partB.isStopped)
             {
@@ -86,34 +123,5 @@ public class ShipController : MonoBehaviour
                 
             }
         }
-
-        BFMove = Input.GetAxis("Vertical");
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            DUmove = 1;
-        }
-        else if (Input.GetKey(KeyCode.LeftControl))
-        {
-            DUmove = -1;
-        }
-        else
-        {
-            DUmove = 0;
-        }
-
-        _mouseY = Input.GetAxis("Mouse X") * Time.deltaTime * lookSensitivity * 1000;
-        // _controllerY = Input.GetAxis("Controller X") * Time.deltaTime * lookSensitivity * 1000;
-        _yRot += _mouseY;
-        _lookX = Input.GetAxis("Mouse Y") * Time.deltaTime * lookSensitivity * 1000;
-        _xRot -= _lookX;
-        _xRot = Mathf.Clamp(_xRot, -30, 30);
-        _yRot = Mathf.Clamp(_yRot, -60, 60);
-        cameraOrbit.localRotation = Quaternion.Euler(_xRot, _yRot, 0);
-    }
-
-    private void FixedUpdate()
-    {
-        rb.AddRelativeForce(0f, DUmove * thrust, BFMove * thrust);
-        rb.AddRelativeTorque(0f, LRMove * turningThrust, 0f);
     }
 }
