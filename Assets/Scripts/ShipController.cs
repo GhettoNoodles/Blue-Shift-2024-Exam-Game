@@ -37,7 +37,7 @@ public class ShipController : MonoBehaviour
         turn = Input.GetAxis("Right Stick Horizontal");
         BFMove = Input.GetAxis("Vertical");
         LRMove = Input.GetAxis("Horizontal");
-        ParticleEffects(BFMove,turn);
+        //ParticleEffects(BFMove,turn);
         if (Input.GetKey(KeyCode.LeftShift))
         {
             DUmove = 1;

@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI : MonoBehaviour
@@ -12,6 +15,9 @@ public class UI : MonoBehaviour
     [SerializeField] private Image right;
     [SerializeField] private Image lft;
     [SerializeField] private TextMeshProUGUI velTxt;
+    [SerializeField] private GameObject hud;
+    [SerializeField] private GameObject pausemenu;
+    [SerializeField] private GameObject pausebtn;
     
     private void Awake()
     {
@@ -24,6 +30,15 @@ public class UI : MonoBehaviour
             Destroy(this);
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("options"))
+        {
+            Pause();
+        }
+    }
+
     public void UpdateHud(float BF, float LR)
     {
         if (BF>=0)
@@ -52,5 +67,32 @@ public class UI : MonoBehaviour
     public void UpdateVelocity(float vel)
     {
         velTxt.text = Mathf.Floor(vel).ToString();
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pausemenu.SetActive(true);
+        hud.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(pausebtn);
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pausemenu.SetActive(false);
+        hud.SetActive(true);
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
