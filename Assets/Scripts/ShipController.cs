@@ -11,12 +11,14 @@ public class ShipController : MonoBehaviour
     private float BFMove;
     private float DUmove;
     private Rigidbody rb;
+    [SerializeField] private bool particles;
     [SerializeField] private float thrust;
     [SerializeField] private float turningThrust;
     private float _lookX;
     private float _mouseY;
     private float _xRot;
     private float _yRot;
+    
     [SerializeField] private GameObject dirInd;
     [SerializeField] private float lookSensitivity;
     [SerializeField] private Transform cam;
@@ -37,7 +39,11 @@ public class ShipController : MonoBehaviour
         turn = Input.GetAxis("Right Stick Horizontal");
         BFMove = Input.GetAxis("Vertical");
         LRMove = Input.GetAxis("Horizontal");
-        //ParticleEffects(BFMove,turn);
+        if (particles)
+        {
+            ParticleEffects(BFMove,turn);
+        }
+        
         if (Input.GetKey(KeyCode.LeftShift))
         {
             DUmove = 1;
