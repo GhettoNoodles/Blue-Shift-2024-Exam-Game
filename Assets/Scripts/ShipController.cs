@@ -73,6 +73,15 @@ public class ShipController : MonoBehaviour
         
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Planet"))
+        {
+            
+        }
+        UI.Instance.Restart();
+    }
+
     private void updateDir()
     {
         var dir = rb.velocity.normalized;
