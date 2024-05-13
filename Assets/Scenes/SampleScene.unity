@@ -330,7 +330,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 50
   m_Drag: 0
-  m_AngularDrag: 0.5
+  m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -345,7 +345,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &120800582
 MonoBehaviour:
@@ -364,8 +364,6 @@ MonoBehaviour:
   initialVelocity: {x: 0, y: 0, z: 50}
   rb: {fileID: 120800581}
   immovable: 0
-  _currentVelocity: {x: 0, y: 0, z: 0}
-  closestPos: {x: 0, y: 0, z: 0}
 --- !u!120 &120800583
 LineRenderer:
   serializedVersion: 2
@@ -465,7 +463,7 @@ LineRenderer:
     textureMode: 0
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
-    generateLightingData: 0
+    generateLightingData: 1
   m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
@@ -545,7 +543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c440fc5c741ed4eb71f6b771d1d478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numSteps: 250
+  numSteps: 350
   timestep: 0.1
   width: 1
   lr: {fileID: 120800583}
@@ -564,6 +562,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &353411806 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3579639809131245701, guid: a995895f81010d646880f7bde550b3f5, type: 3}
+  m_PrefabInstance: {fileID: 7219545995396841395}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &354621031
 GameObject:
   m_ObjectHideFlags: 0
@@ -5913,10 +5916,8 @@ MonoBehaviour:
   mass: 1000000
   radius: 100
   initialVelocity: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 529490283}
   immovable: 1
-  _currentVelocity: {x: 0, y: 0, z: 0}
-  closestPos: {x: 0, y: 0, z: 0}
 --- !u!135 &529490285
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6426,10 +6427,8 @@ MonoBehaviour:
   mass: 1000000
   radius: 100
   initialVelocity: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 615204399}
   immovable: 1
-  _currentVelocity: {x: 0, y: 0, z: 0}
-  closestPos: {x: 0, y: 0, z: 0}
 --- !u!135 &615204401
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -19791,6 +19790,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2030049350840481048, guid: a995895f81010d646880f7bde550b3f5, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 353411806}
     - target: {fileID: 5282488246545592494, guid: a995895f81010d646880f7bde550b3f5, type: 3}
       propertyPath: m_Name
       value: Body 1 (1)

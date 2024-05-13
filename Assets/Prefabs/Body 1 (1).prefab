@@ -122,10 +122,8 @@ MonoBehaviour:
   mass: 1000000
   radius: 100
   initialVelocity: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 3579639809131245701}
   immovable: 1
-  _currentVelocity: {x: 0, y: 0, z: 0}
-  closestPos: {x: 0, y: 0, z: 0}
 --- !u!54 &3579639809131245701
 Rigidbody:
   m_ObjectHideFlags: 0

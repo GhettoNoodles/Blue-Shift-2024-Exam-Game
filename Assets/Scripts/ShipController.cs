@@ -7,7 +7,9 @@ using UnityEngine.Serialization;
 public class ShipController : MonoBehaviour
 {
     private float LRMove;
-    private float turn;
+    private float horTurn;
+    private float verTurn;
+    private float roll;
     private float BFMove;
     private float DUmove;
     private Rigidbody rb;
@@ -18,7 +20,7 @@ public class ShipController : MonoBehaviour
     private float _mouseY;
     private float _xRot;
     private float _yRot;
-    
+
     [SerializeField] private GameObject dirInd;
     [SerializeField] private float lookSensitivity;
     [SerializeField] private Transform cam;
@@ -27,7 +29,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] private ParticleSystem partR;
     [SerializeField] private ParticleSystem partB;
     [SerializeField] private Vis vis;
-    
+
 
     private void Start()
     {
@@ -36,27 +38,26 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
-        turn = Input.GetAxis("Right Stick Horizontal");
+        horTurn = Input.GetAxis("Right Stick Horizontal");
+        verTurn = Input.GetAxis("Right Stick Vertical");
         BFMove = Input.GetAxis("Vertical");
         LRMove = Input.GetAxis("Horizontal");
+        var up = Input.GetAxis("up");
+        var down = Input.GetAxis("down");
+        var rRoll = Input.GetAxis("rRoll");
+        var lRoll = Input.GetAxis("lRoll");
+        if (Input.GetButton("X"))
+        {
+            MatchVelocity();
+        }
         if (particles)
         {
-            ParticleEffects(BFMove,turn);
-        }
-        
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            DUmove = 1;
-        }
-        else if (Input.GetKey(KeyCode.LeftControl))
-        {
-            DUmove = -1;
-        }
-        else
-        {
-            DUmove = 0;
+            ParticleEffects(BFMove, horTurn);
         }
 
+        DUmove = up - down;
+        roll = lRoll - rRoll;
+        Debug.Log(roll);
         _mouseY = Input.GetAxis("Mouse X") * Time.deltaTime * lookSensitivity * 1000;
         // _controllerY = Input.GetAxis("Controller X") * Time.deltaTime * lookSensitivity * 1000;
         _yRot += _mouseY;
@@ -65,33 +66,37 @@ public class ShipController : MonoBehaviour
         _xRot = Mathf.Clamp(_xRot, -30, 30);
         _yRot = Mathf.Clamp(_yRot, -60, 60);
         //cameraOrbit.localRotation = Quaternion.Euler(_xRot, _yRot, 0);
-        
-        UI.Instance.UpdateHud(BFMove,LRMove);
+
+        UI.Instance.UpdateHud(BFMove, LRMove);
         updateDir();
-        vis.RenderArc(rb.velocity,rb.position,rb.mass);
+        vis.RenderArc(rb.velocity, rb.position, rb.mass);
+    }
+
+    private void MatchVelocity()
+    {
+        rb.AddForce(-1*rb.velocity.normalized*thrust/2f);
+       // rb.rotation =Quaternion.LookRotation(Vector3.RotateTowards(rb.rotation.eulerAngles,new Vector3(0,rb.rotation.y,0),Time.deltaTime,0.0f));
     }
 
     private void FixedUpdate()
     {
-        rb.AddRelativeForce(LRMove*thrust, DUmove * thrust, BFMove * thrust);
+        rb.AddRelativeForce(LRMove * thrust, DUmove * thrust, BFMove * thrust);
         UI.Instance.UpdateVelocity(rb.velocity.magnitude);
-        rb.AddRelativeTorque(0f, turn * turningThrust, 0f);
-        
+        rb.AddRelativeTorque(verTurn * turningThrust, horTurn * turningThrust, roll*turningThrust);
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Planet"))
         {
-            
+            UI.Instance.Restart();
         }
-        UI.Instance.Restart();
     }
 
     private void updateDir()
     {
         var dir = rb.velocity.normalized;
-        var angle = Vector3.SignedAngle(Vector3.forward, dir,Vector3.up);
+        var angle = Vector3.SignedAngle(Vector3.forward, dir, Vector3.up);
         /*float xtwist;
         float ztwist;
         if (angle is > 0f and <= 90f)
@@ -134,9 +139,7 @@ public class ShipController : MonoBehaviour
         {
             if (!partL.isPlaying)
             {
-                
                 partL.Play();
-               
             }
 
             if (partR.isPlaying)
@@ -157,7 +160,7 @@ public class ShipController : MonoBehaviour
             }
         }
 
-        if (_BFMove>0.1f)
+        if (_BFMove > 0.1f)
         {
             if (partB.isStopped)
             {
@@ -170,7 +173,6 @@ public class ShipController : MonoBehaviour
             if (partB.isPlaying)
             {
                 partB.Stop();
-                
             }
         }
     }

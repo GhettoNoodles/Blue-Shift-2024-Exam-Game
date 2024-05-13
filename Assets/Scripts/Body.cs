@@ -8,39 +8,32 @@ public class Body : MonoBehaviour
     public float mass;
     [SerializeField] private float radius;
     [SerializeField] private Vector3 initialVelocity;
-    [SerializeField] private Rigidbody rb;
+    public Rigidbody rb;
     public bool immovable;
-    public Vector3 _currentVelocity;
-    private Vector3 largestPull;
-    public Vector3 closestPos;
+
     private Collider col;
-    
+
 
     private void Start()
     {
-        _currentVelocity = initialVelocity;
+        rb.velocity = initialVelocity;
         col = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public void UpdateVelocity(Body[] allBodies, float timeStep)
     {
         if (!immovable)
-        {   largestPull = Vector3.zero;
+        {
             foreach (var otherBody in allBodies)
             {
                 if (otherBody != this)
                 {
                     float distSqrd = Mathf.Pow(Vector3.Distance(otherBody.transform.position, transform.position), 2);
                     Vector3 forceDir =
-                        (otherBody.GetComponent<Rigidbody>().position - GetComponent<Rigidbody>().position).normalized;
-                    Vector3 force = forceDir * Universe.Instance.gravitationalConst * mass * otherBody.mass /
-                                    distSqrd; //Newton's Law of Gravitation formula
-                    if (largestPull.magnitude<force.magnitude)
-                    {
-                        largestPull = force;
-                       closestPos = otherBody.transform.position;
-                       Debug.Log(otherBody.gameObject.name);
-                    }
+                        (otherBody.rb.position - rb.position).normalized;
+                    Vector3 force = forceDir * (Universe.Instance.gravitationalConst * mass * otherBody.mass) /
+                                    distSqrd;
                     Vector3 acceleration = force / mass;
                     rb.velocity += acceleration * timeStep;
                 }
