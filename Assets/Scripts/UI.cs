@@ -14,6 +14,8 @@ public class UI : MonoBehaviour
     [SerializeField] private Image bck;
     [SerializeField] private Image right;
     [SerializeField] private Image lft;
+    [SerializeField] private Image up;
+    [SerializeField] private Image down;
     [SerializeField] private TextMeshProUGUI velTxt;
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject pausemenu;
@@ -39,7 +41,7 @@ public class UI : MonoBehaviour
         }
     }
 
-    public void UpdateHud(float BF, float LR)
+    public void UpdateHud(float BF, float LR,float DU)
     {
         if (BF>=0)
         {
@@ -61,6 +63,17 @@ public class UI : MonoBehaviour
         {
             right.fillAmount = 0f;
             lft.fillAmount = Mathf.Abs(LR);
+        }
+
+        if (DU>=0)
+        {
+            up.fillAmount = DU;
+            down.fillAmount = 0f;
+        }
+        else
+        {
+            up.fillAmount = 0f;
+            down.fillAmount = Mathf.Abs(DU);
         }
     }
 

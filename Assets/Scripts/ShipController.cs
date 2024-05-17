@@ -13,76 +13,62 @@ public class ShipController : MonoBehaviour
     private float BFMove;
     private float DUmove;
     private Rigidbody rb;
-    [SerializeField] private bool particles;
-    [SerializeField] private float thrust;
-    [SerializeField] private float turningThrust;
-    private float _lookX;
-    private float _mouseY;
-    private float _xRot;
-    private float _yRot;
-
-    [SerializeField] private GameObject dirInd;
-    [SerializeField] private float lookSensitivity;
-    [SerializeField] private Transform cam;
-    [SerializeField] private Transform cameraOrbit;
-    [SerializeField] private ParticleSystem partL;
+    [Header("Requirements")] [SerializeField]
+    private ParticleSystem partL;
     [SerializeField] private ParticleSystem partR;
     [SerializeField] private ParticleSystem partB;
+    [SerializeField] private GameObject dirInd;
+    [Header("Settings")] [SerializeField] private bool particles;
+    [SerializeField] private bool roll_allowed;
+    [SerializeField] private bool vertical;
+    [SerializeField] private float thrust;
+    [SerializeField] private float turningThrust;
+    [SerializeField] private float matchForce;
     [SerializeField] private Vis vis;
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None;
+        if (!roll_allowed)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+        }
+
+        if (!vertical)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX;
+        }
     }
 
     private void Update()
     {
-        horTurn = Input.GetAxis("Right Stick Horizontal");
-        verTurn = Input.GetAxis("Right Stick Vertical");
-        BFMove = Input.GetAxis("Vertical");
-        LRMove = Input.GetAxis("Horizontal");
-        var up = Input.GetAxis("up");
-        var down = Input.GetAxis("down");
-        var rRoll = Input.GetAxis("rRoll");
-        var lRoll = Input.GetAxis("lRoll");
-        if (Input.GetButton("X"))
-        {
-            MatchVelocity();
-        }
+        Inputs();
         if (particles)
         {
             ParticleEffects(BFMove, horTurn);
         }
 
-        DUmove = up - down;
-        roll = lRoll - rRoll;
-        Debug.Log(roll);
-        _mouseY = Input.GetAxis("Mouse X") * Time.deltaTime * lookSensitivity * 1000;
-        // _controllerY = Input.GetAxis("Controller X") * Time.deltaTime * lookSensitivity * 1000;
-        _yRot += _mouseY;
-        _lookX = Input.GetAxis("Mouse Y") * Time.deltaTime * lookSensitivity * 1000;
-        _xRot -= _lookX;
-        _xRot = Mathf.Clamp(_xRot, -30, 30);
-        _yRot = Mathf.Clamp(_yRot, -60, 60);
-        //cameraOrbit.localRotation = Quaternion.Euler(_xRot, _yRot, 0);
-
-        UI.Instance.UpdateHud(BFMove, LRMove);
+        
         updateDir();
         vis.RenderArc(rb.velocity, rb.position, rb.mass);
     }
 
     private void MatchVelocity()
     {
-        rb.AddForce(-1*rb.velocity.normalized*thrust/2f);
-       // rb.rotation =Quaternion.LookRotation(Vector3.RotateTowards(rb.rotation.eulerAngles,new Vector3(0,rb.rotation.y,0),Time.deltaTime,0.0f));
+        var force = (-1 * rb.velocity.normalized * thrust / matchForce);
+        rb.AddForce(force);
+        force = force.normalized;
+        force = transform.InverseTransformDirection(force);
+        UI.Instance.UpdateHud(force.z,force.x,force.y);
     }
 
     private void FixedUpdate()
     {
         rb.AddRelativeForce(LRMove * thrust, DUmove * thrust, BFMove * thrust);
         UI.Instance.UpdateVelocity(rb.velocity.magnitude);
-        rb.AddRelativeTorque(verTurn * turningThrust, horTurn * turningThrust, roll*turningThrust);
+        rb.AddRelativeTorque(verTurn * turningThrust, horTurn * turningThrust, roll * turningThrust);
     }
 
     private void OnCollisionEnter(Collision other)
@@ -90,6 +76,42 @@ public class ShipController : MonoBehaviour
         if (other.gameObject.CompareTag("Planet"))
         {
             UI.Instance.Restart();
+        }
+    }
+
+    private void Inputs()
+    {
+        if (roll_allowed)
+        {
+            var rRoll = Input.GetAxis("rRoll");
+            var lRoll = Input.GetAxis("lRoll");
+            roll = lRoll - rRoll;
+        }
+        if (Input.GetButton("X"))
+        {
+            if (rb.velocity.magnitude>1f)
+            {
+                MatchVelocity(); 
+            }
+            else
+            {
+                UI.Instance.UpdateHud(0,0,0);
+            }
+            
+        }
+        else
+        {
+            horTurn = Input.GetAxis("Right Stick Horizontal");
+            verTurn = Input.GetAxis("Right Stick Vertical");
+            BFMove = Input.GetAxis("Vertical");
+            LRMove = Input.GetAxis("Horizontal");
+            if (vertical)
+            {
+                var up = Input.GetAxis("up");
+                var down = Input.GetAxis("down");
+                DUmove = up - down;
+            }
+            UI.Instance.UpdateHud(BFMove, LRMove, DUmove);
         }
     }
 
