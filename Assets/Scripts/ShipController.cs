@@ -12,7 +12,7 @@ public class ShipController : MonoBehaviour
     private float roll;
     private float BFMove;
     private float DUmove;
-    private Rigidbody rb;
+    public Rigidbody rb;
     [Header("Requirements")] [SerializeField]
     private ParticleSystem partL;
     [SerializeField] private ParticleSystem partR;
