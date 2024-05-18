@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cinemachine;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -63,7 +64,7 @@ public class pathGenerator : MonoBehaviour
         }
         else
         {
-            Drawline();
+            LoadPath();
             Time.timeScale = 1;
         }
         
@@ -71,15 +72,34 @@ public class pathGenerator : MonoBehaviour
 
     private void Drawline()
     {
-        dataPath = Application.persistentDataPath + "/" + TrackName + ".json";
-        string jsonData = File.ReadAllText(dataPath);
-        var path = JsonConvert.DeserializeObject<IntendedPath>(jsonData);
+        var drawPoints = _currentPath.waypoints;
+        float closestdist = 1000000000;
+        int closestIndex= 0;
+        for (int i = 0; i < _currentPath.comp; i++)
+        {
+            var dist = Vector3.Distance(drawPoints[i], ship.transform.position);
+            if ( dist<closestdist)
+            {
+                closestdist = dist;
+                closestIndex = i;
+            }
+        }
+        Debug.Log(closestIndex);
+        var count = _currentPath.comp - closestIndex;
+        var draw = drawPoints.Skip(closestIndex+3).Take(count -3).ToArray();
         lr.enabled = true;
-        lr.positionCount = path.comp;
-        lr.SetPositions(path.waypoints);
+        lr.positionCount = draw.Length;
+        lr.SetPositions(draw);
         lr.startColor = Color.red;
         lr.endColor =Color.red;
         lr.widthMultiplier = 100;
+    }
+
+    private void LoadPath()
+    {
+        dataPath = Application.persistentDataPath + "/" + TrackName + ".json";
+        string jsonData = File.ReadAllText(dataPath);
+        _currentPath = JsonConvert.DeserializeObject<IntendedPath>(jsonData);
     }
    
     // Update is called once per frame
@@ -91,6 +111,7 @@ public class pathGenerator : MonoBehaviour
             recordPath = false;
             SavePath();
             Debug.Log("saved");
+            LoadPath();
             Drawline();
             Debug.Log("drawed");
         }
@@ -109,6 +130,10 @@ public class pathGenerator : MonoBehaviour
                 waypoints.Add(ship.rb.position);
                 recordingCooldown = 0;
             }
+        }
+        else
+        {
+            Drawline();
         }
     }
 
