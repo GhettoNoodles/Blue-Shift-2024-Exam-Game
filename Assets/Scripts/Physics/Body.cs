@@ -8,6 +8,7 @@ public class Body : MonoBehaviour
     public float mass;
     [SerializeField] private float radius;
     [SerializeField] private Vector3 initialVelocity;
+    [SerializeField] private Collider shipcollider;
     public Rigidbody rb;
     public bool immovable;
 
@@ -43,6 +44,10 @@ public class Body : MonoBehaviour
 
     public bool Contains(Vector3 pt)
     {
+        if (col == null)
+        {
+            col = shipcollider;
+        }
         return col.bounds.Contains(pt);
     }
 }

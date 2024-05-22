@@ -88,10 +88,11 @@ public class pathGenerator : MonoBehaviour
         var count = _currentPath.comp - closestIndex;
         var draw = drawPoints.Skip(closestIndex+3).Take(count -3).ToArray();
         lr.enabled = true;
-        lr.positionCount = draw.Length;
-        lr.SetPositions(draw);
-        lr.startColor = Color.red;
-        lr.endColor =Color.red;
+       // lr.material = new Material(Shader.Find("Particle/Additive"));
+        lr.positionCount = drawPoints.Length;
+        lr.SetPositions(drawPoints);
+        lr.startColor = Color.white;
+        lr.endColor =Color.white;
         lr.widthMultiplier = 100;
     }
 

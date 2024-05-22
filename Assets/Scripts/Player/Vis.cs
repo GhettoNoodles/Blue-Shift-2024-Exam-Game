@@ -42,8 +42,8 @@ public class Vis : MonoBehaviour
         lr.enabled = true;
         lr.positionCount = drawpoints.Length;
         lr.SetPositions(drawpoints);
-        lr.startColor = Color.red;
-        lr.endColor =Color.red;
+        lr.startColor = Color.white;
+        lr.endColor =Color.white;
         lr.widthMultiplier = width;
     }
 

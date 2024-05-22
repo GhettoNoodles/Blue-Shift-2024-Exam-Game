@@ -13,10 +13,18 @@ public class ShipController : MonoBehaviour
     private float BFMove;
     private float DUmove;
     public Rigidbody rb;
+
     [Header("Requirements")] [SerializeField]
-    private ParticleSystem partL;
-    [SerializeField] private ParticleSystem partR;
-    [SerializeField] private ParticleSystem partB;
+    private ParticleSystem particle_Fwd_Left;
+
+    [SerializeField] private ParticleSystem particle_Fwd_mid;
+    [SerializeField] private ParticleSystem particle_Fwd_right;
+    [SerializeField] private ParticleSystem particle_back_left;
+    [SerializeField] private ParticleSystem particle_back_right;
+    [SerializeField] private ParticleSystem particle_Left;
+    [SerializeField] private ParticleSystem particle_Right;
+    [SerializeField] private ParticleSystem particle_Up;
+    [SerializeField] private ParticleSystem particle_Down;
     [SerializeField] private GameObject dirInd;
     [Header("Settings")] [SerializeField] private bool particles;
     [SerializeField] private bool roll_allowed;
@@ -44,22 +52,18 @@ public class ShipController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ( other.gameObject.CompareTag("Checkpoint"))
+        if (other.gameObject.CompareTag("Checkpoint"))
         {
             other.GetComponent<Checkpoint>().ClearCP();
         }
-       
     }
 
     private void Update()
     {
         Inputs();
-        if (particles)
-        {
-            ParticleEffects(BFMove, horTurn);
-        }
-
         
+
+
         updateDir();
         vis.RenderArc(rb.velocity, rb.position, rb.mass);
     }
@@ -70,7 +74,8 @@ public class ShipController : MonoBehaviour
         rb.AddForce(force);
         force = force.normalized;
         force = transform.InverseTransformDirection(force);
-        UI.Instance.UpdateHud(force.z,force.x,force.y);
+        UI.Instance.UpdateHud(force.z, force.x, force.y);
+        ParticleEffects(force.z,force.x,force.y);
     }
 
     private void FixedUpdate()
@@ -96,20 +101,25 @@ public class ShipController : MonoBehaviour
             var lRoll = Input.GetAxis("lRoll");
             roll = lRoll - rRoll;
         }
+
         if (Input.GetButton("X"))
         {
-            if (rb.velocity.magnitude>1f)
+            if (rb.velocity.magnitude > 1f)
             {
-                MatchVelocity(); 
+                MatchVelocity();
             }
             else
             {
-                UI.Instance.UpdateHud(0,0,0);
+                UI.Instance.UpdateHud(0, 0, 0);
             }
-            
         }
         else
+        
         {
+            if (particles)
+            {
+                ParticleEffects(BFMove, LRMove, DUmove);
+            }
             horTurn = Input.GetAxis("Right Stick Horizontal");
             verTurn = Input.GetAxis("Right Stick Vertical");
             BFMove = Input.GetAxis("Vertical");
@@ -120,6 +130,7 @@ public class ShipController : MonoBehaviour
                 var down = Input.GetAxis("down");
                 DUmove = up - down;
             }
+
             UI.Instance.UpdateHud(BFMove, LRMove, DUmove);
         }
     }
@@ -152,59 +163,63 @@ public class ShipController : MonoBehaviour
         dirInd.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
     }
 
-    private void ParticleEffects(float _BFMove, float _turn)
+    private void ParticleEffects(float _BFMove, float _LRMove, float _DUMove)
     {
-        if (_turn < -0.1f)
-        {
-            if (!partR.isPlaying)
-            {
-                partR.Play();
-            }
-
-            if (partL.isPlaying)
-            {
-                partL.Stop();
-            }
-        }
-        else if (_turn > 0.1f)
-        {
-            if (!partL.isPlaying)
-            {
-                partL.Play();
-            }
-
-            if (partR.isPlaying)
-            {
-                partR.Stop();
-            }
-        }
-        else
-        {
-            if (partR.isPlaying)
-            {
-                partR.Stop();
-            }
-
-            if (partL.isPlaying)
-            {
-                partL.Stop();
-            }
-        }
-
         if (_BFMove > 0.1f)
         {
-            if (partB.isStopped)
-            {
-                partB.gameObject.SetActive(true);
-                partB.Play();
-            }
+            particle_Fwd_Left.Play();
+            particle_Fwd_mid.Play();
+            particle_Fwd_right.Play();
+            particle_back_left.Stop();
+            particle_back_right.Stop();
+        }
+        else if (_BFMove < -0.1f)
+        {
+            particle_back_left.Play();
+            particle_back_right.Play();
+            particle_Fwd_Left.Stop();
+            particle_Fwd_mid.Stop();
+            particle_Fwd_right.Stop();
         }
         else
         {
-            if (partB.isPlaying)
-            {
-                partB.Stop();
-            }
+            particle_back_left.Stop();
+            particle_back_right.Stop();
+            particle_Fwd_Left.Stop();
+            particle_Fwd_mid.Stop();
+            particle_Fwd_right.Stop();
+        }
+
+        if (_LRMove > 0.1f)
+        {
+            particle_Right.Play();
+            particle_Left.Stop();
+        }
+        else if (_LRMove < -0.1f)
+        {
+            particle_Left.Play();
+            particle_Right.Stop();
+        }
+        else
+        {
+            particle_Left.Stop();
+            particle_Right.Stop();
+        }
+
+        if (_DUMove > 0.1f)
+        {
+            particle_Up.Play();
+            particle_Down.Stop();
+        }
+        else if (_DUMove < -0.1f)
+        {
+            particle_Down.Play();
+            particle_Up.Stop();
+        }
+        else
+        {
+            particle_Up.Stop();
+            particle_Down.Stop();
         }
     }
 }
