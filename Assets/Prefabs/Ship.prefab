@@ -616,7 +616,7 @@ MonoBehaviour:
   roll_allowed: 1
   vertical: 1
   thrust: 500
-  turningThrust: 1000
+  turningThrust: 1500
   matchForce: 2
   vis: {fileID: 4501137701862747934}
 --- !u!120 &2348111304511645613

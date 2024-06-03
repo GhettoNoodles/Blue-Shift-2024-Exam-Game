@@ -61,10 +61,6 @@ public class ShipController : MonoBehaviour
     private void Update()
     {
         Inputs();
-        
-
-
-        updateDir();
         vis.RenderArc(rb.velocity, rb.position, rb.mass);
     }
 
@@ -135,33 +131,7 @@ public class ShipController : MonoBehaviour
         }
     }
 
-    private void updateDir()
-    {
-        var dir = rb.velocity.normalized;
-        var angle = Vector3.SignedAngle(Vector3.forward, dir, Vector3.up);
-        /*float xtwist;
-        float ztwist;
-        if (angle is > 0f and <= 90f)
-        {
-            xtwist = -10;
-            ztwist = -10;
-        }
-        else if (angle is > 90f and <= 180f)
-        {
-            xtwist = 10;
-            ztwist = -10;
-        }else if (angle is <0f  and >= -90f)
-        {
-            xtwist = -10;
-            ztwist = 10;
-        }
-        else
-        {
-            xtwist = 10;
-            ztwist = 10;
-        }*/
-        dirInd.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
-    }
+    
 
     private void ParticleEffects(float _BFMove, float _LRMove, float _DUMove)
     {

@@ -17,6 +17,7 @@ public class UI : MonoBehaviour
     [SerializeField] private Image up;
     [SerializeField] private Image down;
     [SerializeField] private TextMeshProUGUI velTxt;
+    [SerializeField] private TextMeshProUGUI timerTxt;
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject pausemenu;
     [SerializeField] private GameObject pausebtn;
@@ -32,6 +33,8 @@ public class UI : MonoBehaviour
             Destroy(this);
         }
     }
+    
+
 
     private void Update()
     {
@@ -39,6 +42,8 @@ public class UI : MonoBehaviour
         {
             Pause();
         }
+        
+        timerTxt.text = (Mathf.Round(Time.timeSinceLevelLoad*100f)/100f).ToString();
     }
 
     public void UpdateHud(float BF, float LR,float DU)
