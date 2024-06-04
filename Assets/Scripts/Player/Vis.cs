@@ -8,6 +8,12 @@ public class Vis : MonoBehaviour
     [SerializeField] private float timestep;
     [SerializeField] private float width;
     [SerializeField] private LineRenderer lr;
+    [SerializeField] private Material visMat;
+
+    [SerializeField]
+    private Color dangerColour;
+    [SerializeField]
+    private Color okColour;
     private Body[] bodies;
     private bool end = false;
     private void Start()
@@ -31,8 +37,12 @@ public class Vis : MonoBehaviour
                     if (bd.Contains(pos) && bd.immovable)
                     {
                         end = true;
+                        visMat.color =dangerColour;
+                        visMat.SetColor("_EmissionColor",dangerColour);
                         break;
                     }
+                    visMat.color = okColour;
+                    visMat.SetColor("_EmissionColor",okColour);
                 }
             }
 
@@ -42,8 +52,6 @@ public class Vis : MonoBehaviour
         lr.enabled = true;
         lr.positionCount = drawpoints.Length;
         lr.SetPositions(drawpoints);
-        lr.startColor = Color.white;
-        lr.endColor =Color.white;
         lr.widthMultiplier = width;
     }
 
