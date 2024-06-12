@@ -8,19 +8,7 @@ public class Checkpoint : MonoBehaviour
     public bool isCurrentCP;
     public bool isCleared = false;
     public Checkpoint nextCP;
-    public float timer;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        timer = 0f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        timer += Time.deltaTime;
-    }
+    public float timeSnap;
 
     public void ClearCP()
     {
@@ -28,12 +16,12 @@ public class Checkpoint : MonoBehaviour
         {
             if (isCurrentCP)
             {
-                Debug.Log("finish");
-                Debug.Log(timer);
+                
+                UI.Instance.Finish(true);
             }
             else
             {
-                Debug.Log("Cant Finish");
+                UI.Instance.Finish(false);
             }
         }
         else if (isCurrentCP)

@@ -21,6 +21,12 @@ public class UI : MonoBehaviour
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject pausemenu;
     [SerializeField] private GameObject pausebtn;
+    [SerializeField] private GameObject finPanel;
+    [SerializeField] private GameObject retry;
+    [SerializeField] private GameObject next;
+    [SerializeField] private TextMeshProUGUI finTimeText;
+
+    [SerializeField] private float raceTime;
     
     private void Awake()
     {
@@ -33,8 +39,30 @@ public class UI : MonoBehaviour
             Destroy(this);
         }
     }
-    
 
+
+    public void Finish(bool complete)
+    {
+        Time.timeScale = 0;
+        hud.SetActive(false);
+        finPanel.SetActive(true);
+        if (complete)
+        {
+            var timetext = (Time.timeSinceLevelLoad).ToString("F3");
+            finTimeText.text = timetext;
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(next);
+        }
+        else
+        {
+            finTimeText.text = "Did not finish";
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(retry);
+        }
+       
+      
+       
+    }
 
     private void Update()
     {
@@ -43,7 +71,7 @@ public class UI : MonoBehaviour
             Pause();
         }
         
-        timerTxt.text = (Mathf.Round(Time.timeSinceLevelLoad*100f)/100f).ToString();
+        timerTxt.text = (Time.timeSinceLevelLoad).ToString("F2");
     }
 
     public void UpdateHud(float BF, float LR,float DU)
@@ -106,7 +134,11 @@ public class UI : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }public void NextTrack()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
 
     public void Quit()

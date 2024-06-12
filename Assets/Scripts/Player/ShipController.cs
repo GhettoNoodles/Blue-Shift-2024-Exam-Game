@@ -33,6 +33,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float turningThrust;
     [SerializeField] private float matchForce;
     [SerializeField] private Vis vis;
+    
 
 
     private void Start()
@@ -48,6 +49,7 @@ public class ShipController : MonoBehaviour
         {
             rb.constraints = RigidbodyConstraints.FreezeRotationX;
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
