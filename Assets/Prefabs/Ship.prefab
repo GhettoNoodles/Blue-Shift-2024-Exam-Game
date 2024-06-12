@@ -164,6 +164,9 @@ MonoBehaviour:
   timestep: 0.1
   width: 1
   lr: {fileID: 2348111304511645613}
+  visMat: {fileID: 2100000, guid: 2c9fbbea8fc61234997f4fb045380573, type: 2}
+  dangerColour: {r: 1, g: 0, b: 0, a: 0}
+  okColour: {r: 0, g: 1, b: 0.88185906, a: 0}
 --- !u!1 &4914629603588173866
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 50
   radius: 2.5
-  initialVelocity: {x: 0, y: 0, z: 50}
+  initialVelocity: {x: 0, y: 0, z: 100}
   shipcollider: {fileID: 6222036412265122021}
   rb: {fileID: 4845229826881805945}
   immovable: 0
