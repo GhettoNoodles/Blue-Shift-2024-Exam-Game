@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class tutorial : MonoBehaviour
 {
@@ -31,8 +32,12 @@ public class tutorial : MonoBehaviour
             Destroy(currentScreen);
             currentScreen = Instantiate(tutScreens[currentTut],HUD.transform);
             ship.transform.position = startlocations[currentTut];
-           shipBody.position = startlocations[currentTut];
+            shipBody.position = startlocations[currentTut];
             shipBody.velocity = Vector3.zero;
+        }
+        else
+        {
+            SceneManager.LoadScene(1);
         }
     }
 

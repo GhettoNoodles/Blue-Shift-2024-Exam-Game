@@ -84,7 +84,6 @@ public class pathGenerator : MonoBehaviour
                 closestIndex = i;
             }
         }
-        Debug.Log(closestIndex);
         var count = _currentPath.comp - closestIndex;
         var draw = drawPoints.Skip(closestIndex+3).Take(count -3).ToArray();
         lr.enabled = true;
