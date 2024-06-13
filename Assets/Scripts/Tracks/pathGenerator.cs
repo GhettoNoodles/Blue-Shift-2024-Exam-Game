@@ -30,7 +30,6 @@ public class pathGenerator : MonoBehaviour
     private IntendedPath _currentPath = new IntendedPath();
     public string savesListPath = "";
     public string dataPath = "";
-    public List<string> tracksaves;
     public List<Vector3> waypoints = new List<Vector3>();
     
     
@@ -44,15 +43,6 @@ public class pathGenerator : MonoBehaviour
         {
             Instance = this;
         }
-        if (!File.Exists(savesListPath))
-        {
-            tracksaves = new List<string>();
-        }
-        else
-        {
-            string jsonData = File.ReadAllText(savesListPath);
-            tracksaves = JsonConvert.DeserializeObject<List<string>>(jsonData);
-        }
     }
 
     private void Start()
@@ -64,7 +54,7 @@ public class pathGenerator : MonoBehaviour
         }
         else
         {
-            LoadPath();
+            LoadPath(TrackName);
             Time.timeScale = 1;
         }
         
@@ -95,9 +85,9 @@ public class pathGenerator : MonoBehaviour
         lr.widthMultiplier = 100;
     }
 
-    private void LoadPath()
+    public void LoadPath(string trackName)
     {
-        dataPath = Application.persistentDataPath + "/" + TrackName + ".json";
+        dataPath = Application.persistentDataPath + "/" + trackName + ".json";
         string jsonData = File.ReadAllText(dataPath);
         _currentPath = JsonConvert.DeserializeObject<IntendedPath>(jsonData);
     }
@@ -111,7 +101,7 @@ public class pathGenerator : MonoBehaviour
             recordPath = false;
             SavePath();
             Debug.Log("saved");
-            LoadPath();
+            LoadPath(TrackName);
             Drawline();
             Debug.Log("drawed");
         }

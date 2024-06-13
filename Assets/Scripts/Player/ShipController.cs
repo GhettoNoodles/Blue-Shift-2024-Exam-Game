@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class ShipController : MonoBehaviour
@@ -27,6 +28,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] private ParticleSystem particle_Down;
     [SerializeField] private GameObject dirInd;
     [Header("Settings")] [SerializeField] private bool particles;
+    [Header("Settings")] [SerializeField] private bool tutorial;
     [SerializeField] private bool roll_allowed;
     [SerializeField] private bool vertical;
     [SerializeField] private float thrust;
@@ -87,7 +89,15 @@ public class ShipController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Planet"))
         {
-            UI.Instance.Restart();
+            if (!tutorial)
+            {
+                UI.Instance.Restart();   
+            }
+            else
+            { 
+                FindObjectOfType<tutorial>().Reset();
+            }
+            
         }
     }
 
