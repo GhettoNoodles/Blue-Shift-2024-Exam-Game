@@ -78,6 +78,7 @@ public class UI : MonoBehaviour
             }
             else
             {
+                audioManager.Instance.PlayLose();
                 finTimeText.text = "Did not finish";
                 finDiffTxt.text = msg;
                 EventSystem.current.SetSelectedGameObject(null);
@@ -88,18 +89,20 @@ public class UI : MonoBehaviour
 
     public void CheckpointTime(float diff)
     {
-        diffTxt.gameObject.SetActive(true);
-
-        fading = true;
-        if (diff >= 0f)
+        if (timeSaver.Instance.LoadTimes() != null)
         {
-            finDiffTxt.text = "+" + diff.ToString("F3");
-            diffTxt.color = Color.red;
-        }
-        else
-        {
-            diffTxt.text = diff.ToString("F3");
-            diffTxt.color = Color.green;
+            diffTxt.gameObject.SetActive(true);
+            fading = true;
+            if (diff >= 0f)
+            {
+                finDiffTxt.text = "+" + diff.ToString("F3");
+                diffTxt.color = Color.red;
+            }
+            else
+            {
+                diffTxt.text = diff.ToString("F3");
+                diffTxt.color = Color.green;
+            }
         }
     }
 

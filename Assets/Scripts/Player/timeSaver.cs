@@ -37,7 +37,7 @@ public class timeSaver : MonoBehaviour
         path = Application.persistentDataPath + "/times/" + trackName + ".json";
     }
 
-    private BestTime LoadTimes()
+    public BestTime LoadTimes()
     {
         if (File.Exists(path))
         {

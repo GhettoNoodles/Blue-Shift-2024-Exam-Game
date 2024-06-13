@@ -88,7 +88,7 @@ public class pathGenerator : MonoBehaviour
 
     public void LoadPath(string trackName)
     {
-        dataPath = Application.persistentDataPath + "/" + trackName + ".json";
+        dataPath = Application.streamingAssetsPath + "/paths/" + trackName + ".json";
         string jsonData = File.ReadAllText(dataPath);
         _currentPath = JsonConvert.DeserializeObject<IntendedPath>(jsonData);
     }
@@ -136,7 +136,7 @@ public class pathGenerator : MonoBehaviour
             drawpoints[i] = waypoints[i];
         }
         var saveName = "1";
-        dataPath = Application.persistentDataPath + "/" + TrackName + ".json";
+        dataPath = Application.streamingAssetsPath + "/paths/" + TrackName + ".json";
         Debug.Log("PATH: "+ dataPath);
         _currentPath.name = "track" + saveName;
         _currentPath.waypoints = drawpoints;

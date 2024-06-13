@@ -40,6 +40,7 @@ public class ShipController : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(Application.streamingAssetsPath);
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.None;
         if (!roll_allowed)
