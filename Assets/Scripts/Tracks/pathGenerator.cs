@@ -20,7 +20,7 @@ public class pathGenerator : MonoBehaviour
     [SerializeField] private string TrackName;
     [SerializeField] private float recordingFreq;
     [SerializeField] private bool set_to_record;
-    
+    [SerializeField] private float max_distance_Border;
     [SerializeField] private ShipController ship;
     [SerializeField] private LineRenderer lr;
     
@@ -71,13 +71,14 @@ public class pathGenerator : MonoBehaviour
             if ( dist<closestdist)
             {
                 closestdist = dist;
-                closestIndex = i;
             }
         }
-        var count = _currentPath.comp - closestIndex;
-        var draw = drawPoints.Skip(closestIndex+3).Take(count -3).ToArray();
+
+        if (closestdist>max_distance_Border)
+        {
+            UI.Instance.Finish(false,"You went too far from the path");
+        }
         lr.enabled = true;
-       // lr.material = new Material(Shader.Find("Particle/Additive"));
         lr.positionCount = drawPoints.Length;
         lr.SetPositions(drawPoints);
         lr.startColor = Color.white;

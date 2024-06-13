@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -29,9 +30,9 @@ public class UI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finTimeText;
     [SerializeField] private float raceTime;
     [SerializeField] private float maxfade;
-    private bool finished =false;
+    private bool finished = false;
     private float fadeTimer;
-    private bool fading =false;
+    private bool fading = false;
 
     private void Awake()
     {
@@ -46,12 +47,12 @@ public class UI : MonoBehaviour
     }
 
 
-    public void Finish(bool complete)
+    public void Finish(bool complete, string msg)
     {
         if (!finished)
         {
             finished = true;
-            Time.timeScale = 0;`
+            Time.timeScale = 0;
             hud.SetActive(false);
             finPanel.SetActive(true);
             if (complete)
@@ -60,23 +61,25 @@ public class UI : MonoBehaviour
                 var difference = timeSaver.Instance.CompareTimes(FindObjectsOfType<Checkpoint>().Length - 1);
                 Debug.Log(difference);
                 finTimeText.text = timetext;
-                
-                if (difference>=0f)
+
+                if (difference >= 0f)
                 {
-                    finDiffTxt.text = "+"+ difference.ToString("F3");
-                    finDiffTxt.color =Color.red;
+                    finDiffTxt.text = "+" + difference.ToString("F3");
+                    finDiffTxt.color = Color.red;
                 }
                 else
                 {
                     finDiffTxt.text = difference.ToString("F3");
                     finDiffTxt.color = Color.green;
                 }
+
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(next);
             }
             else
             {
                 finTimeText.text = "Did not finish";
+                finDiffTxt.text = msg;
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(retry);
             }
@@ -86,17 +89,43 @@ public class UI : MonoBehaviour
     public void CheckpointTime(float diff)
     {
         diffTxt.gameObject.SetActive(true);
-        diffTxt.text = diff.ToString("F3");
+
         fading = true;
-        if (diff>=0f)
+        if (diff >= 0f)
         {
-            diffTxt.color =Color.red;
+            finDiffTxt.text = "+" + diff.ToString("F3");
+            diffTxt.color = Color.red;
         }
         else
         {
+            diffTxt.text = diff.ToString("F3");
             diffTxt.color = Color.green;
         }
-        
+    }
+
+    public void Vibrate(float dist)
+    {
+        if (dist < 150f)
+        {
+            Gamepad.current.SetMotorSpeeds(0.75f, 1f);
+
+            InputSystem.ResumeHaptics();
+        }
+        else if (dist < 250)
+        {
+            Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+
+            InputSystem.ResumeHaptics();
+        }
+        else if (dist < 500)
+        {
+            Gamepad.current.SetMotorSpeeds(0.1f, 0.3f);
+            InputSystem.ResumeHaptics();
+        }
+        else
+        {
+            InputSystem.PauseHaptics();
+        }
     }
 
     private void Update()
@@ -110,7 +139,7 @@ public class UI : MonoBehaviour
         if (fading)
         {
             fadeTimer += Time.deltaTime;
-            if (fadeTimer>=maxfade)
+            if (fadeTimer >= maxfade)
             {
                 fadeTimer = 0f;
                 fading = false;
@@ -191,5 +220,10 @@ public class UI : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    private void Start()
+    {
+        InputSystem.PauseHaptics();
     }
 }

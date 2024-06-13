@@ -63,8 +63,7 @@ public class timeSaver : MonoBehaviour
 
             return diff;
         }
-        else
-        if (cps.Count == index-1)
+        if (cps.Count-1 == index)
         {
             SaveTimes();
         }

@@ -26,19 +26,26 @@ public class Body : MonoBehaviour
     {
         if (!immovable)
         {
+            var closestDist = 2000f;
             foreach (var otherBody in allBodies)
             {
                 if (otherBody != this)
                 {
-                    float distSqrd = Mathf.Pow(Vector3.Distance(otherBody.transform.position, transform.position), 2);
+                    var dist = Vector3.Distance(otherBody.transform.position, transform.position);
+                    float distSqrd = Mathf.Pow(dist, 2);
                     Vector3 forceDir =
                         (otherBody.rb.position - rb.position).normalized;
                     Vector3 force = forceDir * (Universe.Instance.gravitationalConst * mass * otherBody.mass) /
                                     distSqrd;
                     Vector3 acceleration = force / mass;
                     rb.velocity += acceleration * timeStep;
+                    if (dist<closestDist)
+                    {
+                        closestDist = dist;
+                    }
                 }
             }
+            UI.Instance.Vibrate(closestDist);
         }
     }
 

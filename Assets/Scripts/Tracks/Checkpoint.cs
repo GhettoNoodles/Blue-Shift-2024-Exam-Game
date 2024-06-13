@@ -18,11 +18,11 @@ public class Checkpoint : MonoBehaviour
             if (isCurrentCP)
             {
                 
-                UI.Instance.Finish(true);
+                UI.Instance.Finish(true,"");
             }
             else
             {
-                UI.Instance.Finish(false);
+                UI.Instance.Finish(false,"You missed some checkpoints");
             }
         }
         else if (isCurrentCP)

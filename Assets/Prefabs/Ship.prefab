@@ -616,6 +616,7 @@ MonoBehaviour:
   particle_Down: {fileID: 8082915307088654389}
   dirInd: {fileID: 3526491139958015958}
   particles: 1
+  tutorial: 0
   roll_allowed: 1
   vertical: 1
   thrust: 500
