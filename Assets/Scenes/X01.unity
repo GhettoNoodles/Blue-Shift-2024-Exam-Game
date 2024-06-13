@@ -1634,10 +1634,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6859840423721076748, guid: f7aae0a21a7dcd341836949e33343514, type: 3}
-      propertyPath: turningThrust
-      value: 1500
-      objectReference: {fileID: 0}
     - target: {fileID: 8640239627629834597, guid: f7aae0a21a7dcd341836949e33343514, type: 3}
       propertyPath: m_Name
       value: Ship

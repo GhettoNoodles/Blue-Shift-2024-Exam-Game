@@ -89,13 +89,15 @@ public class UI : MonoBehaviour
 
     public void CheckpointTime(float diff)
     {
-        if (timeSaver.Instance.LoadTimes() != null)
+        if (!timeSaver.Instance.first)
         {
             diffTxt.gameObject.SetActive(true);
             fading = true;
+            Debug.Log("UI diff: "+ diff.ToString("F3"));
             if (diff >= 0f)
             {
-                finDiffTxt.text = "+" + diff.ToString("F3");
+                Debug.Log("output diff: "+ diff.ToString("F3"));
+                diffTxt.text = "+" + diff.ToString("F3");
                 diffTxt.color = Color.red;
             }
             else

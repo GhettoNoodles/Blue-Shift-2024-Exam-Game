@@ -304,7 +304,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4242212923604309263}
-  - component: {fileID: 3550680545801896129}
   m_Layer: 0
   m_Name: orbit
   m_TagString: Untagged
@@ -328,14 +327,6 @@ Transform:
   - {fileID: 2372891473790002374}
   m_Father: {fileID: 7628870352608572047}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &3550680545801896129
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4914629603588173866}
-  m_Enabled: 1
 --- !u!1 &5745380918157351906
 GameObject:
   m_ObjectHideFlags: 0

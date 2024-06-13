@@ -18,7 +18,8 @@ public class timeSaver : MonoBehaviour
     [SerializeField] private List<Checkpoint> cps;
     [SerializeField] private string path;
     [SerializeField] private string trackName;
-
+    public bool first = false;
+    private BestTime oldTimes;
 
     private void Awake()
     {
@@ -35,6 +36,11 @@ public class timeSaver : MonoBehaviour
     private void Start()
     {
         path = Application.persistentDataPath + "/times/" + trackName + ".json";
+        first = !File.Exists(path);
+        if (!first)
+        {
+            oldTimes = LoadTimes();
+        }
     }
 
     public BestTime LoadTimes()
@@ -52,15 +58,17 @@ public class timeSaver : MonoBehaviour
 
     public float CompareTimes(int index)
     {
-        var oldTimes = LoadTimes();
-        if (oldTimes != null)
+        if (!first)
         {
             var diff = cps[index].timeSnap - oldTimes.times[index];
             if (index == cps.Count - 1&&diff<0)
             {
                 SaveTimes();
             }
-
+            Debug.Log("old: "+oldTimes.times[index]);
+            Debug.Log("new: "+cps[index].timeSnap);
+            Debug.Log("diff: " +diff.ToString("F3"));
+            
             return diff;
         }
         if (cps.Count-1 == index)

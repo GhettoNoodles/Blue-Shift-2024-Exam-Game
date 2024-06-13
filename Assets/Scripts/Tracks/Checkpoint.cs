@@ -28,11 +28,12 @@ public class Checkpoint : MonoBehaviour
         else if (isCurrentCP)
         {
             audioManager.Instance.PlayCP();
-            var diff = timeSaver.Instance.CompareTimes(index);
-            UI.Instance.CheckpointTime(diff);
             isCleared = true;
             nextCP.isCurrentCP = true;
             isCurrentCP = false;
+            var diff = timeSaver.Instance.CompareTimes(index);
+            Debug.Log("CP diff: "+ diff.ToString("F3"));
+            UI.Instance.CheckpointTime(diff);
         }
     }
 
