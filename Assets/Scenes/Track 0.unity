@@ -628,6 +628,7 @@ MonoBehaviour:
   - {fileID: 203598548}
   path: 
   trackName: left_right
+  first: 0
 --- !u!4 &822218784
 Transform:
   m_ObjectHideFlags: 0
@@ -1239,6 +1240,18 @@ PrefabInstance:
     - target: {fileID: 5827881916939060798, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: authorTime
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: bronzeTime
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: silverTime
+      value: 42
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

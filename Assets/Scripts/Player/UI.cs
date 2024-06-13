@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,10 +18,16 @@ public class UI : MonoBehaviour
     [SerializeField] private Image lft;
     [SerializeField] private Image up;
     [SerializeField] private Image down;
+    [SerializeField] private Image bronze;
+    [SerializeField] private Image silver;
+    [SerializeField] private Image gold;
     [SerializeField] private TextMeshProUGUI velTxt;
     [SerializeField] private TextMeshProUGUI timerTxt;
     [SerializeField] private TextMeshProUGUI diffTxt;
     [SerializeField] private TextMeshProUGUI finDiffTxt;
+    [SerializeField] private TextMeshProUGUI bronzetxt;
+    [SerializeField] private TextMeshProUGUI silvertxt;
+    [SerializeField] private TextMeshProUGUI goldtxt;
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject pausemenu;
     [SerializeField] private GameObject pausebtn;
@@ -28,8 +35,12 @@ public class UI : MonoBehaviour
     [SerializeField] private GameObject retry;
     [SerializeField] private GameObject next;
     [SerializeField] private TextMeshProUGUI finTimeText;
+    [SerializeField] private TextMeshProUGUI bestTimetxt;
     [SerializeField] private float raceTime;
     [SerializeField] private float maxfade;
+    [SerializeField] private float bronzeTime;
+    [SerializeField] private float silverTime;
+    [SerializeField] private float authorTime;
     private bool finished = false;
     private float fadeTimer;
     private bool fading = false;
@@ -45,6 +56,13 @@ public class UI : MonoBehaviour
             Destroy(this);
         }
     }
+    private void Start()
+    {
+        InputSystem.PauseHaptics();
+        bronzetxt.text = bronzeTime.ToString("F3");
+        silvertxt.text = silverTime.ToString("F3");
+        goldtxt.text = authorTime.ToString("F3");
+    }
 
 
     public void Finish(bool complete, string msg)
@@ -57,7 +75,8 @@ public class UI : MonoBehaviour
             finPanel.SetActive(true);
             if (complete)
             {
-                var timetext = (Time.timeSinceLevelLoad).ToString("F3");
+                var currentTime = Time.timeSinceLevelLoad;
+                var timetext = currentTime.ToString("F3");
                 var difference = timeSaver.Instance.CompareTimes(FindObjectsOfType<Checkpoint>().Length - 1);
                 Debug.Log(difference);
                 finTimeText.text = timetext;
@@ -72,9 +91,10 @@ public class UI : MonoBehaviour
                     finDiffTxt.text = difference.ToString("F3");
                     finDiffTxt.color = Color.green;
                 }
-
+                
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(next);
+                EndStats(currentTime);
             }
             else
             {
@@ -84,7 +104,36 @@ public class UI : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(retry);
             }
+            
         }
+    }
+
+    private void EndStats(float currentTime)
+    {
+        float bestTime =currentTime;
+        if (timeSaver.Instance.oldTimes!=null)
+        {
+             bestTime = timeSaver.Instance.LoadTimes().times.Last();
+        }
+        
+        bestTimetxt.text = "Your Best Time: "+bestTime.ToString("F3");
+        if (bestTime<=authorTime)
+        {
+            bronze.color =Color.white;
+            silver.color =Color.white;
+            gold.color =Color.white;
+        }else if (bestTime<=silverTime)
+        {
+            bronze.color =Color.white;
+            silver.color =Color.white;
+            gold.color =Color.black;
+        }else if (bestTime<=bronzeTime)
+        {
+            bronze.color =Color.white;
+            silver.color =Color.black;
+            gold.color =Color.black;
+        }
+        
     }
 
     public void CheckpointTime(float diff)
@@ -227,8 +276,5 @@ public class UI : MonoBehaviour
         Application.Quit();
     }
 
-    private void Start()
-    {
-        InputSystem.PauseHaptics();
-    }
+    
 }

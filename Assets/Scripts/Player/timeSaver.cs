@@ -19,7 +19,7 @@ public class timeSaver : MonoBehaviour
     [SerializeField] private string path;
     [SerializeField] private string trackName;
     public bool first = false;
-    private BestTime oldTimes;
+    public BestTime oldTimes;
 
     private void Awake()
     {

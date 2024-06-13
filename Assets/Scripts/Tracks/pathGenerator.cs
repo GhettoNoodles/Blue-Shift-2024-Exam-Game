@@ -63,8 +63,7 @@ public class pathGenerator : MonoBehaviour
     private void Drawline()
     {
         var drawPoints = _currentPath.waypoints;
-        float closestdist = 1000000000;
-        int closestIndex= 0;
+        float closestdist = Single.MaxValue;
         for (int i = 0; i < _currentPath.comp; i++)
         {
             var dist = Vector3.Distance(drawPoints[i], ship.transform.position);
