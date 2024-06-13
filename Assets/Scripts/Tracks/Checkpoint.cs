@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    [SerializeField] private int index;
     public bool isFinish;
     public bool isCurrentCP;
     public bool isCleared = false;
@@ -26,6 +27,8 @@ public class Checkpoint : MonoBehaviour
         }
         else if (isCurrentCP)
         {
+            var diff = timeSaver.Instance.CompareTimes(index);
+            UI.Instance.CheckpointTime(diff);
             isCleared = true;
             nextCP.isCurrentCP = true;
             isCurrentCP = false;

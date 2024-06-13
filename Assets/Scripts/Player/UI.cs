@@ -18,6 +18,8 @@ public class UI : MonoBehaviour
     [SerializeField] private Image down;
     [SerializeField] private TextMeshProUGUI velTxt;
     [SerializeField] private TextMeshProUGUI timerTxt;
+    [SerializeField] private TextMeshProUGUI diffTxt;
+    [SerializeField] private TextMeshProUGUI finDiffTxt;
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject pausemenu;
     [SerializeField] private GameObject pausebtn;
@@ -25,12 +27,15 @@ public class UI : MonoBehaviour
     [SerializeField] private GameObject retry;
     [SerializeField] private GameObject next;
     [SerializeField] private TextMeshProUGUI finTimeText;
-
     [SerializeField] private float raceTime;
-    
+    [SerializeField] private float maxfade;
+    private bool finished =false;
+    private float fadeTimer;
+    private bool fading =false;
+
     private void Awake()
     {
-        if (Instance==null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -43,25 +48,55 @@ public class UI : MonoBehaviour
 
     public void Finish(bool complete)
     {
-        Time.timeScale = 0;
-        hud.SetActive(false);
-        finPanel.SetActive(true);
-        if (complete)
+        if (!finished)
         {
-            var timetext = (Time.timeSinceLevelLoad).ToString("F3");
-            finTimeText.text = timetext;
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(next);
+            finished = true;
+            Time.timeScale = 0;`
+            hud.SetActive(false);
+            finPanel.SetActive(true);
+            if (complete)
+            {
+                var timetext = (Time.timeSinceLevelLoad).ToString("F3");
+                var difference = timeSaver.Instance.CompareTimes(FindObjectsOfType<Checkpoint>().Length - 1);
+                Debug.Log(difference);
+                finTimeText.text = timetext;
+                
+                if (difference>=0f)
+                {
+                    finDiffTxt.text = "+"+ difference.ToString("F3");
+                    finDiffTxt.color =Color.red;
+                }
+                else
+                {
+                    finDiffTxt.text = difference.ToString("F3");
+                    finDiffTxt.color = Color.green;
+                }
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(next);
+            }
+            else
+            {
+                finTimeText.text = "Did not finish";
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(retry);
+            }
+        }
+    }
+
+    public void CheckpointTime(float diff)
+    {
+        diffTxt.gameObject.SetActive(true);
+        diffTxt.text = diff.ToString("F3");
+        fading = true;
+        if (diff>=0f)
+        {
+            diffTxt.color =Color.red;
         }
         else
         {
-            finTimeText.text = "Did not finish";
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(retry);
+            diffTxt.color = Color.green;
         }
-       
-      
-       
+        
     }
 
     private void Update()
@@ -70,13 +105,23 @@ public class UI : MonoBehaviour
         {
             Pause();
         }
-        
+
         timerTxt.text = (Time.timeSinceLevelLoad).ToString("F2");
+        if (fading)
+        {
+            fadeTimer += Time.deltaTime;
+            if (fadeTimer>=maxfade)
+            {
+                fadeTimer = 0f;
+                fading = false;
+                diffTxt.gameObject.SetActive(false);
+            }
+        }
     }
 
-    public void UpdateHud(float BF, float LR,float DU)
+    public void UpdateHud(float BF, float LR, float DU)
     {
-        if (BF>=0)
+        if (BF >= 0)
         {
             fwd.fillAmount = BF;
             bck.fillAmount = 0f;
@@ -87,7 +132,7 @@ public class UI : MonoBehaviour
             bck.fillAmount = Mathf.Abs(BF);
         }
 
-        if (LR>=0)
+        if (LR >= 0)
         {
             right.fillAmount = LR;
             lft.fillAmount = 0f;
@@ -98,7 +143,7 @@ public class UI : MonoBehaviour
             lft.fillAmount = Mathf.Abs(LR);
         }
 
-        if (DU>=0)
+        if (DU >= 0)
         {
             up.fillAmount = DU;
             down.fillAmount = 0f;
@@ -135,10 +180,12 @@ public class UI : MonoBehaviour
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }public void NextTrack()
+    }
+
+    public void NextTrack()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Quit()

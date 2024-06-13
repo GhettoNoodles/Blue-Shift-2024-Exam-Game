@@ -58,6 +58,7 @@ public class ShipController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Checkpoint"))
         {
+            other.GetComponent<Checkpoint>().timeSnap = Time.timeSinceLevelLoad;
             other.GetComponent<Checkpoint>().ClearCP();
         }
     }
