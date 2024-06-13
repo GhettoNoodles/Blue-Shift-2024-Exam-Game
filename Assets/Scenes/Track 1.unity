@@ -1371,6 +1371,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: authorTime
+      value: 58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: bronzeTime
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878973734067629915, guid: dcf82acdfa5f57d4a943b548372b4f68, type: 3}
+      propertyPath: silverTime
+      value: 62
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
