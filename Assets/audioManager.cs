@@ -27,6 +27,7 @@ public class audioManager : MonoBehaviour
     }
     private void Start()
     {
+        Debug.Log(gameObject.name);
         PlayBG();
     }
 
